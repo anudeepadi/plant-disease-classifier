@@ -1,148 +1,51 @@
-# Plant Disease Detection and Social Media Integration Project
+# Plant Disease Classifier
 
-## 🌟 Overview
-A comprehensive full-stack application that combines plant disease detection using machine learning with social media features. This project was developed as part of the Major Project Computer Science and Engineering (CSE) coursework at Hyderabad Institute of Technology and Management (HITAM), Hyderabad.
+A **HITAM Computer Science and Engineering team capstone** combining a TensorFlow plant-image classifier with a web interface, optional chatbot and community pages.
 
-## 🚀 Features
+**Status:** historical coursework, preserved as an archived project. It includes training code and a model artifact; its older dependencies and provider integrations need compatibility work before a fresh full-stack run.
 
-### Plant Disease Detection
-- Advanced image processing for plant disease identification
-- Machine learning model built with TensorFlow
-- Real-time disease detection through API endpoints
-- Support for multiple plant types and diseases
-- Detailed analysis reports
+## Team
 
-### Social Media Integration
-- User authentication and profile management
-- Social networking features
-- Interactive user interface
-- Real-time updates and notifications
-- Content sharing capabilities
+- Adiraju Venkata Anudeep — 4th Year CSE
+- Bangaru Nihal — 4th Year CSE
+- Kala Aditya — 4th Year CSE
 
-### Additional Features
-- Interactive chat bot for user assistance
-- Order management system
-- Responsive web design
-- Secure API integration
-- Environment variable management for sensitive data
+The original project does not record a per-person responsibility breakdown, so this README preserves the team credit without assigning unverified individual contributions.
 
-## 🛠️ Technology Stack
+## Classifier path
 
-### Frontend
-- HTML5, CSS3, JavaScript
-- React.js for UI components
-- NPM for package management
-- Responsive design framework
+[train_model.py](src/train_model.py) trains from the Kaggle **New Plant Diseases Dataset (Augmented)** with 224×224 RGB images. The repository includes `src/plant_disease_detection.h5` and [categories.json](src/categories.json). The prediction code resizes/reshapes input for the model, chooses the highest-scoring class and returns plant name/disease labels.
 
-### Backend
-- Python FastAPI server
-- TensorFlow for ML models
-- SQLite/PostgreSQL for database
-- RESTful API architecture
+An offline model-inspection command avoids starting the chatbot or contacting a provider:
 
-### ML/AI Components
-- TensorFlow for model training
-- scikit-learn for data processing
-- Pandas for data manipulation
-- Matplotlib for visualization
-- PIL for image processing
-
-### Development Tools
-- Git for version control
-- npm for package management
-- uvicorn for server deployment
-- Docker for containerization
-
-## 📦 Installation
-
-### 1. Social Media Component
 ```bash
-# Navigate to social media directory
-cd socialMedia
-
-# Initialize npm project
-npm init --y
-
-# Install dependencies
-npm install
-
-# Start the application
-npm start
+git clone https://github.com/anudeepadi/plant-disease-classifier.git
+cd plant-disease-classifier
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install tensorflow
+python - <<'PYTHON'
+from tensorflow import keras
+model = keras.models.load_model("src/plant_disease_detection.h5", compile=False)
+model.summary()
+PYTHON
 ```
 
-### 2. Python Backend Setup
-```bash
-# Install Python dependencies
-pip install -r requirements.txt
+The saved model was built with older TensorFlow/Keras tooling; current versions may need compatibility adjustments. This command has not been reported as passing on a new runtime. For prediction behavior, inspect `get_prediction` and `/predict` in [src/main.py](src/main.py); the API accepts image input differently from a standard file-upload endpoint.
 
-# Navigate to src directory
-cd src
+## Web and community components
 
-# Start the FastAPI server
-uvicorn main:app --reload
-```
+- [index.html](index.html) and [Prediction/](Prediction/) — static pages and classifier UI.
+- [src/main.py](src/main.py) — FastAPI prediction/chat integration.
+- [socialMedia/](socialMedia/) — Express-based community prototype.
+- [orderPage/](orderPage/) — optional ordering interface.
 
-### 3. Environment Setup
-Create a `.env` file in the root directory with the following variables:
-```env
-OPENAI_API_KEY=your_openai_api_key
-WOLFRAM_ALPHA_APPID=your_wolfram_alpha_appid
-TWILIO_AUTH_TOKEN=your_twilio_auth_token
-```
+For the community component, use `npm install` then `npm start` inside `socialMedia/`; its package is already initialized. The Python API uses both `requirements.txt` and `src/requirements.txt`, but source imports also include historical LangChain integrations that are not fully captured in those files. The backend expects environment configuration at import time and model paths relative to `src/`. These are restoration requirements, not a verified one-command deployment.
 
-## 📚 Project Structure
-```
-MajorProjectMain/
-├── Prediction/        # ML model and prediction logic
-├── assets/           # Static assets and resources
-├── orderPage/        # Order management system
-├── socialMedia/      # Social media component
-├── src/             # Backend source code
-│   └── main.py      # FastAPI application
-├── .env             # Environment variables
-├── .gitignore       # Git ignore rules
-├── index.html       # Main entry point
-├── requirements.txt  # Python dependencies
-└── README.md        # Project documentation
-```
+## Evaluation limits
 
-## 🔧 Configuration
-1. Plant Disease Dataset: Download from the provided link
-2. API Keys: Set up in `.env` file
-3. Database: Configure connection strings
-4. Server: Set up FastAPI configurations
-5. Frontend: Configure API endpoints
+No reproducible held-out metrics, confusion matrix or independently captured sample-prediction report accompanies the model. Dataset images and field photos can differ substantially; a classifier label is not a verified diagnosis. A follow-up evaluation should retain a fixed split, check related-image leakage and show original input, predicted class, reference label and confidence for both successes and failures.
 
-## 🚀 Usage
-1. Start the FastAPI backend server
-2. Launch the frontend application
-3. Access the system through `index.html`
-4. Upload plant images for disease detection
-5. Interact with social media features
+## Acknowledgments and license
 
-## 🤝 Contributing
-We welcome contributions! Please feel free to submit pull requests.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 👥 Team Members
-- Adiraju Venkata Anudeep (4th Year CSE)
-- Bangaru Nihal (4th Year CSE)
-- Kala Aditya (4th Year CSE)
-
-## 📄 License
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-- Hyderabad Institute of Technology and Management (HITAM)
-- Department of Computer Science and Engineering
-- Project Mentors and Advisors
-- Open Source Community
-
-## 📞 Contact
-For any queries or suggestions, please reach out to the project maintainers:
-- GitHub: [@anudeepadi](https://github.com/anudeepadi)
+Hyderabad Institute of Technology and Management (HITAM), the CSE department, project mentors/advisors and the open-source community. The original README states MIT licensing; no standalone project LICENSE file is present in this checkout. Existing component notices are retained.
